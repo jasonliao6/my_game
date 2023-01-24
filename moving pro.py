@@ -11,7 +11,7 @@ class Player(pygame.sprite.Sprite):
         pygame.sprite.Sprite.__init__(self)
 ##        self.image = pygame.Surface((50,50))
 ##        self.image.fill(('#fccc6d'))
-        scratch_pic = pygame.image.load("slime.webp")
+        scratch_pic = pygame.image.load("slime.jpeg")
         self.image = pygame.transform.scale(scratch_pic, (50,50))
         self.rect = self.image.get_rect()
         a = random.randint(0,800)
@@ -70,6 +70,8 @@ def Game_over(rScore):
     scoreT = my_font.render(f'Score: {rScore}', False, ('#f7ce5c'))
     ma = 0
     mb = 0
+    x=3
+    y=3
     
     while True:
         for event in pygame.event.get():
@@ -79,10 +81,16 @@ def Game_over(rScore):
 
 
         
-        ma += 1
-        mb += 1
-##        if ma >= 500:
-##            print('hi')
+        ma += x
+        mb += y
+        if ma > SCREEN_X-400:
+            x /= -1
+        if mb > SCREEN_Y-50:
+            y /= -1
+        if ma < 0:
+            x /= -1
+        if mb < 0:
+            y /= -1
 ##        
         display.fill('#abf9ff')
         display.blit(text,(ma,mb))
@@ -103,9 +111,9 @@ def game_loop():
     player_group.add(player)
 
     num = 0
-    hardest = 20
+    hardest = 5
     score = 0
-    dif = 50
+    dif = 30
     enemy_group = pygame.sprite.Group()
 
     while True:
@@ -120,7 +128,7 @@ def game_loop():
       if num >= dif:
           enemy_group.add(Enemy())#adding an enemy
           num = 0
-          dif -= 0.5
+          dif -= 0.3
           if dif <= hardest:
               dif = hardest
 
