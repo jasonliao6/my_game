@@ -60,6 +60,7 @@ class Enemy(pygame.sprite.Sprite):
         self.rect.x -= self.k
         self.rect.y += self.o
 ##      something
+##      somwthing else
         
 
 
