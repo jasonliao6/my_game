@@ -1,5 +1,6 @@
 import pygame, sys
 import random
+import math
 pygame.init()
 clock = pygame.time.Clock()
 display = pygame.display.set_mode((0,0), pygame.FULLSCREEN)
@@ -45,20 +46,45 @@ class Player(pygame.sprite.Sprite):
 class Enemy(pygame.sprite.Sprite):
     def __init__(self):
         pygame.sprite.Sprite.__init__(self)
-        
+        a1 = random.randint(-300, 0)
+        a2 = random.randint(SCREEN_X,SCREEN_X+400)
+        if random.randint(0,1) == 1:
+            a = a1
+            self.k = random.randint(1,5)
+        else:
+            a = a2
+            self.k = random.randint(-5, -1)
+        b1 = random.randint(-300, 0)
+        b2 = random.randint(SCREEN_Y, SCREEN_Y+300)
+        if random.randint(0,1) == 1:
+            b = b1
+            self.o = random.randint(1, 5)
+        else:
+            b = b2
+            self.o = random.randint(-5,-1)
+
         enemy = pygame.image.load("enemy.png")
         self.image = pygame.transform.scale(enemy, (50,50))
+        x = self.k
+        y = self.o
+        angle = -180/math.pi*math.sin(x*y)*math.atan((abs(x)-abs(y))/(abs(x)+abs(y))) -135
+
+##        print(angle)
+        self.image = pygame.transform.rotate(self.image, angle)
         self.rect = self.image.get_rect()
-        a = random.randint(SCREEN_X,SCREEN_X+400)
-        b = random.randint(0, SCREEN_Y)
         self.rect.center = (a,b)
 
-        self.k = random.randint(2, 5)           
-        self.o = random.randint(-3, 3)
-
     def update(self):
-        self.rect.x -= self.k
+        self.rect.x += self.k
         self.rect.y += self.o
+
+        ##UNDERNEATH HERE YOU WILL BE ABLE TO MAKE CHEAT BUTTON
+        keystate = pygame.key.get_pressed()
+        if keystate[pygame.K_a]:
+            if keystate[pygame.K_b]:
+                if keystate[pygame.K_c]:
+                    self.k = 0
+                    self.o = 0
 ##      something
 ##      somwthing else
         
@@ -67,6 +93,7 @@ class Enemy(pygame.sprite.Sprite):
 
 def Game_over(rScore):
     text = my_font.render('Press r to restart', False, ('#f7ce5c'))
+    quitT = my_font.render('Press q to quit', False, ('#f7ce5c'))
     scoreT = my_font.render(f'Score: {rScore}', False, ('#f7ce5c'))
     ma = 0
     mb = 0
@@ -90,15 +117,19 @@ def Game_over(rScore):
         if ma < 0:
             x /= -1
         if mb < 0:
-            y /= -1
+            y /= -1 
 ##        
         display.fill('#abf9ff')
         display.blit(text,(ma,mb))
+        display.blit(quitT,(0,50))
 ##        display.blit(text, (200,250))
         display.blit(scoreT, (0,0))
         keystate = pygame.key.get_pressed()
         if keystate[pygame.K_r]:
             break
+        if keystate[pygame.K_q]:
+            pygame.quit()
+            sys.exit()
 
         pygame.display.update()
         clock.tick(120)
