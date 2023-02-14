@@ -65,10 +65,7 @@ class Enemy(pygame.sprite.Sprite):
 
         enemy = pygame.image.load("enemy.png")
         self.image = pygame.transform.scale(enemy, (50,50))
-        x = self.k
-        y = self.o
-        angle = -180/math.pi*math.sin(x*y)*math.atan((abs(x)-abs(y))/(abs(x)+abs(y))) -135
-
+        angle = random.randint(0,360)
 ##        print(angle)
         self.image = pygame.transform.rotate(self.image, angle)
         self.rect = self.image.get_rect()
@@ -152,6 +149,10 @@ def game_loop():
           if event.type == pygame.QUIT:
               pygame.quit()
               sys.exit()
+      keystate = pygame.key.get_pressed()
+      if keystate[pygame.K_q]:
+            pygame.quit()
+            sys.exit()
             
       display.fill('#abf9ff')
       num += 1
