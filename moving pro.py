@@ -141,7 +141,7 @@ def game_loop():
     num = 0
     hardest = 5
     score = 0
-    dif = 1
+    dif = 30
     enemy_group = pygame.sprite.Group()
 
     while True:
