@@ -10,8 +10,7 @@ SCREEN_X, SCREEN_Y = display.get_size()
 class Player(pygame.sprite.Sprite):
     def __init__(self):
         pygame.sprite.Sprite.__init__(self)
-##        self.image = pygame.Surface((50,50))
-##        self.image.fill(('#fccc6d'))
+
         scratch_pic = pygame.image.load("slime.jpeg")
         self.image = pygame.transform.scale(scratch_pic, (50,50))
         self.rect = self.image.get_rect()
@@ -21,16 +20,7 @@ class Player(pygame.sprite.Sprite):
 
 
     def update(self):
-    #keypress       
-##        keystate = pygame.key.get_pressed()
-##        if keystate[pygame.K_w]:
-##            self.rect.y -= 3
-##        if keystate[pygame.K_s]:
-##            self.rect.y += 3
-##        if keystate[pygame.K_a]:
-##            self.rect.x -= 3
-##        if keystate[pygame.K_d]:
-##            self.rect.x += 3
+
         self.rect.center = pygame.mouse.get_pos()
     #wall detection       
         if self.rect.x > SCREEN_X-50:
@@ -65,8 +55,20 @@ class Enemy(pygame.sprite.Sprite):
 
         enemy = pygame.image.load("enemy.png")
         self.image = pygame.transform.scale(enemy, (50,50))
-        angle = random.randint(0,360)
-##        print(angle)
+        angle = 0
+
+        if (self.k >= 0):
+            if (self.o >= 0):
+                angle = 90
+            else:
+                angle = 180
+        else:
+            if (self.o >= 0):
+                angle = 0
+            else:
+                angle = 270
+
+
         self.image = pygame.transform.rotate(self.image, angle)
         self.rect = self.image.get_rect()
         self.rect.center = (a,b)
@@ -75,15 +77,13 @@ class Enemy(pygame.sprite.Sprite):
         self.rect.x += self.k
         self.rect.y += self.o
 
-        ##UNDERNEATH HERE YOU WILL BE ABLE TO MAKE CHEAT BUTTON
+
         keystate = pygame.key.get_pressed()
         if keystate[pygame.K_a]:
             if keystate[pygame.K_b]:
                 if keystate[pygame.K_c]:
                     self.k = 0
                     self.o = 0
-##      something
-##      somwthing else
         
 
 
@@ -114,12 +114,12 @@ def Game_over(rScore):
         if ma < 0:
             x /= -1
         if mb < 0:
-            y /= -1 
-##        
+            y /= -1
+            
         display.fill('#abf9ff')
         display.blit(text,(ma,mb))
         display.blit(quitT,(0,50))
-##        display.blit(text, (200,250))
+
         display.blit(scoreT, (0,0))
         keystate = pygame.key.get_pressed()
         if keystate[pygame.K_r]:
@@ -141,7 +141,7 @@ def game_loop():
     num = 0
     hardest = 5
     score = 0
-    dif = 30
+    dif = 1
     enemy_group = pygame.sprite.Group()
 
     while True:
@@ -158,14 +158,13 @@ def game_loop():
       num += 1
       score += 1/120
       if num >= dif:
-          enemy_group.add(Enemy())#adding an enemy
+          enemy_group.add(Enemy())
           num = 0
-          dif -= 0.3
+          dif -= dif/100
           if dif <= hardest:
               dif = hardest
 
-    ##  if num % 5 == 0:
-    ##     image = pygame.transform.rotate(Enemy, 5)
+
 
       player_group.draw(display)
       enemy_group.draw(display)
@@ -175,7 +174,7 @@ def game_loop():
 
       if pygame.sprite.spritecollideany(player, enemy_group) != None:
           print("Game Over")
-          
+          print(dif)
           break
 
       roundedScore = round(score, 1)
